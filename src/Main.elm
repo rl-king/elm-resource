@@ -20,7 +20,7 @@ main =
 type Level
     = Beginner
     | Intermediate
-    | Expert
+    | Advanced
 
 
 type Category
@@ -29,6 +29,7 @@ type Category
     | Article
     | Tutorial
     | Video
+    | Exercise
 
 
 type alias Resource =
@@ -78,9 +79,10 @@ view model =
 headerView : Model -> Html Msg
 headerView model =
     header []
-        [ h1 [] [ text "Elm Resource" ]
-        , h2 [] [ text "An overview of useful Elm resources" ]
-        , input [] []
+        [ div [ class "titles" ]
+            [ h1 [] [ text "Elm Resource" ]
+            , h3 [] [ text "An overview of useful Elm resources" ]
+            ]
         , levelFilterView model
         , categoryFilterView model
         ]
@@ -95,6 +97,7 @@ categoryFilterView model =
             , Article
             , Tutorial
             , Video
+            , Exercise
             ]
         )
 
@@ -105,46 +108,41 @@ levelFilterView model =
         (List.map (filterItem << levelToString)
             [ Beginner
             , Intermediate
-            , Expert
+            , Advanced
             ]
         )
 
 
 filterItem : String -> Html Msg
 filterItem x =
-    a [] [ text x ]
+    a [ class "filter-item" ] [ text x ]
 
 
 resourceListView : Model -> Html Msg
 resourceListView model =
-    section [] [ ul [] (List.map resourceListItem model.resources) ]
+    section [] [ ul [ class "resource-list" ] (List.map resourceListItem model.resources) ]
 
 
 resourceListItem : Resource -> Html Msg
-resourceListItem { title, summary, topic, category } =
+resourceListItem { title, summary, topic, category, author } =
     li [ class "resource-item" ]
         [ h3 [] [ text title ]
-        , h6 [] [ text (categoryToString category) ]
+        , h6 [ class "category" ] [ text (categoryToString category) ]
+        , h5 [] [ text author ]
         , p [] [ text summary ]
-        , ul [] (List.map resourceTopic topic)
+        , ul [ class "topics" ] (List.map resourceTopic topic)
         ]
 
 
 resourceTopic x =
-    li [] [ text x ]
+    li [ class "topic" ] [ text x ]
 
 
 data : List Resource
 data =
-    [ sampleResource
-    , sampleResource
-    , sampleResource
+    [ Resource "Real World SPA" "Elm codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the RealWorld spec and API." "Richard Feldman" "https://github.com/rtfeldman/elm-spa-example" Advanced Example [ "Single Page App", "Authentication" ]
+    , Resource "Real World SPA" "Elm codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the RealWorld spec and API." "Richard Feldman" "https://github.com/rtfeldman/elm-spa-example" Advanced Example [ "Single Page App", "Authentication" ]
     ]
-
-
-sampleResource : Resource
-sampleResource =
-    Resource "title" "SummarySummarySummarySummary" "Author" "url" Beginner Example [ "topic1" ]
 
 
 levelToString : Level -> String
@@ -156,8 +154,8 @@ levelToString x =
         Intermediate ->
             "Intermediate"
 
-        Expert ->
-            "Expert"
+        Advanced ->
+            "Advanced"
 
 
 categoryToString : Category -> String
@@ -177,3 +175,6 @@ categoryToString x =
 
         Video ->
             "Video"
+
+        Exercise ->
+            "Exercise"

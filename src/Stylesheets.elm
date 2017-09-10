@@ -28,6 +28,7 @@ css =
             , typography
             , header
             , containers
+            , elements
             ]
 
 
@@ -43,6 +44,10 @@ base =
     , E.body
         [ margin zero
         , fontFamilies sans
+        , backgroundColor (mono W2)
+        ]
+    , everything
+        [ boxSizing borderBox
         ]
     ]
 
@@ -63,26 +68,30 @@ typography =
         [ padding2 (ms -1) zero
         , margin zero
         , fontSize (ms 2)
-        , lineHeight (ms 2)
         , fontWeight (int 500)
         ]
     , E.h3
-        [ padding zero
+        [ padding2 (ms -3) zero
         , margin zero
         , fontSize (ms 2)
-        , lineHeight (ms 3)
-        , fontWeight (int 400)
+        , fontWeight (int 500)
+        ]
+    , E.h5
+        [ padding zero
+        , margin zero
+        , fontSize (ms 0)
+        , fontWeight (int 500)
         ]
     , E.h6
         [ padding zero
         , margin zero
         , fontSize (ms 0)
-        , lineHeight (ms 3)
-        , fontWeight (int 400)
+        , fontWeight (int 500)
         ]
     , E.p
         [ color (mono B3)
         , margin zero
+        , padding2 (ms 0) zero
         , fontSize (ms 1)
         , lineHeight (ms 3)
         ]
@@ -101,12 +110,20 @@ typography =
 header =
     [ E.header
         [ padding (ms 1)
+        , borderBottom3 (px 1) solid (mono W4)
+        , backgroundColor (mono W1)
+        ]
+    , class "titles"
+        [ displayFlex
+        , justifyContent spaceBetween
         ]
     , E.nav
-        [ descendants
+        [ paddingTop (ms -4)
+        , descendants
             [ E.a
                 [ paddingRight (ms 1)
                 , cursor pointer
+                , fontSize (ms 1)
                 ]
             ]
         ]
@@ -121,16 +138,42 @@ containers =
     [ E.section
         [ padding (ms 1)
         ]
+    , class "resource-list"
+        [ displayFlex
+        , justifyContent spaceBetween
+        ]
     , class "resource-item"
-        [ backgroundColor (mono W2)
+        [ backgroundColor (mono W1)
         , padding (ms 1)
-        , margin (ms 1)
+        , width (calc (pct 50) minus (ms 0))
+        , position relative
         ]
     ]
 
 
 
 -- ELEMENTS
+
+
+elements =
+    [ class "category"
+        [ position absolute
+        , top zero
+        , right zero
+        , padding (px 6)
+        , color green
+        ]
+    , class "topic"
+        [ border3 (px 1) solid (mono W4)
+        , display inlineBlock
+        , padding2 (px 2) (px 4)
+        , borderRadius (px 4)
+        , marginRight (px 6)
+        ]
+    ]
+
+
+
 -- MODULARSCALE
 
 
@@ -221,3 +264,31 @@ sans =
     , "Helvetica Neue"
     , "sans-serif"
     ]
+
+
+blue =
+    hex "3CA5EA"
+
+
+green =
+    hex "27C37F"
+
+
+red =
+    hex "FD3740"
+
+
+yellow =
+    hex "F1D027"
+
+
+purple =
+    hex "7F63D2"
+
+
+pink =
+    hex "f9b2e1"
+
+
+orange =
+    hex "FF8A30"
