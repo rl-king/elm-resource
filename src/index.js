@@ -1,4 +1,4 @@
-require('scss/style.scss');
+require('Stylesheets.elm');
 
 var Elm = require('Main');
 var node = document.getElementById('main')

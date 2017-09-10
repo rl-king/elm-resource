@@ -3,6 +3,7 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
+import Icons as Icon
 import Set exposing (..)
 
 
@@ -27,11 +28,13 @@ type Category
     | Discussion
     | Article
     | Tutorial
+    | Video
 
 
 type alias Resource =
     { title : String
     , summary : String
+    , author : String
     , url : String
     , level : Level
     , category : Category
@@ -76,28 +79,30 @@ headerView : Model -> Html Msg
 headerView model =
     header []
         [ h1 [] [ text "Elm Resource" ]
+        , h2 [] [ text "An overview of useful Elm resources" ]
         , input [] []
-        , levelSelectView model
-        , categorySelectView model
+        , levelFilterView model
+        , categoryFilterView model
         ]
 
 
-categorySelectView : Model -> Html Msg
-categorySelectView model =
+categoryFilterView : Model -> Html Msg
+categoryFilterView model =
     nav []
-        (List.map (navItem << categoryToString)
+        (List.map (filterItem << categoryToString)
             [ Example
             , Discussion
             , Article
             , Tutorial
+            , Video
             ]
         )
 
 
-levelSelectView : Model -> Html Msg
-levelSelectView model =
+levelFilterView : Model -> Html Msg
+levelFilterView model =
     nav []
-        (List.map (navItem << levelToString)
+        (List.map (filterItem << levelToString)
             [ Beginner
             , Intermediate
             , Expert
@@ -105,20 +110,21 @@ levelSelectView model =
         )
 
 
-navItem : String -> Html Msg
-navItem x =
+filterItem : String -> Html Msg
+filterItem x =
     a [] [ text x ]
 
 
 resourceListView : Model -> Html Msg
 resourceListView model =
-    ul [] (List.map resourceListItem model.resources)
+    section [] [ ul [] (List.map resourceListItem model.resources) ]
 
 
 resourceListItem : Resource -> Html Msg
-resourceListItem { title, summary, topic } =
-    li []
+resourceListItem { title, summary, topic, category } =
+    li [ class "resource-item" ]
         [ h3 [] [ text title ]
+        , h6 [] [ text (categoryToString category) ]
         , p [] [ text summary ]
         , ul [] (List.map resourceTopic topic)
         ]
@@ -138,7 +144,7 @@ data =
 
 sampleResource : Resource
 sampleResource =
-    Resource "title" "Summary" "url" Beginner Example [ "topic1" ]
+    Resource "title" "SummarySummarySummarySummary" "Author" "url" Beginner Example [ "topic1" ]
 
 
 levelToString : Level -> String
@@ -151,7 +157,7 @@ levelToString x =
             "Intermediate"
 
         Expert ->
-            "Export"
+            "Expert"
 
 
 categoryToString : Category -> String
@@ -168,3 +174,6 @@ categoryToString x =
 
         Tutorial ->
             "Tutorial"
+
+        Video ->
+            "Video"
