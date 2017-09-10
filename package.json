@@ -6,7 +6,7 @@
     "author": "Ruben Lie King",
     "repository": {
         "type": "git",
-        "url": "https://gitub.com/rl-king/elmresource"
+        "url": "https://gitub.com/rl-king/elm-resource"
     },
     "scripts": {
         "start": "webpack-dev-server --hot --inline",

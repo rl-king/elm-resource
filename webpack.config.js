@@ -13,15 +13,13 @@ const WebpackNotifierPlugin = require('webpack-notifier');
 const prod = 'production';
 const dev = 'development';
 
-const TARGET_ENV = process.env.npm_lifecycle_event === 'build' ? prod : dev;
-const isDev = TARGET_ENV == dev;
-const isProd = TARGET_ENV == prod;
+const targetEnv = process.env.npm_lifecycle_event === 'build' ? prod : dev;
 
 const entryPath = path.join(__dirname, 'src/index.js');
 const outputPath = path.join(__dirname, 'dist');
-const outputFilename = isProd ? '[name]-[hash].js' : '[name].js'
+const outputFilename = targetEnv === prod ? '[name]-[hash].js' : '[name].js'
 
-console.log(chalk.yellowBright.underline.bold('Starting ' + TARGET_ENV + ' mode\n'));
+print(`Starting '${targetEnv}' mode\n`);
 
 var commonConfig = {
     output: {
@@ -56,7 +54,7 @@ var commonConfig = {
 }
 
 
-if (isDev === true) {
+if (targetEnv === dev) {
     module.exports = merge(commonConfig, {
         entry: [
             'webpack-dev-server/client?http://localhost:5001',
@@ -94,7 +92,7 @@ if (isDev === true) {
 }
 
 
-if (isProd === true) {
+if (targetEnv === prod) {
     module.exports = merge(commonConfig, {
         entry: entryPath,
         module: {
@@ -142,4 +140,8 @@ if (isProd === true) {
             })
         ]
     });
+}
+
+function print(x) {
+    return console.log(chalk.yellowBright.underline.bold(x))
 }
