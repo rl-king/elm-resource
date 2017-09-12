@@ -139,8 +139,23 @@ filterItem msg fn x =
 
 
 resourceListView : Model -> Html Msg
-resourceListView model =
-    section [] [ ul [ class "resource-list" ] (List.map resourceListItem model.resources) ]
+resourceListView { selectedCategory, selectedLevel, resources } =
+    let
+        filteredResources =
+            case ( selectedCategory, selectedLevel ) of
+                ( Nothing, Nothing ) ->
+                    resources
+
+                ( Just cat, Nothing ) ->
+                    List.filter ((==) cat << .category) resources
+
+                ( Nothing, Just level ) ->
+                    List.filter ((==) level << .level) resources
+
+                ( Just cat, Just level ) ->
+                    List.filter (\x -> ( cat, level ) == ( x.category, x.level )) resources
+    in
+    section [] [ ul [ class "resource-list" ] (List.map resourceListItem filteredResources) ]
 
 
 resourceListItem : Resource -> Html Msg
