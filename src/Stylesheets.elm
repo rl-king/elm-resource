@@ -98,6 +98,9 @@ typography =
     , E.a
         [ color (mono B1)
         , textDecoration none
+        , hover
+            [ textDecoration underline
+            ]
         ]
     , E.ul
         [ padding zero
@@ -125,6 +128,10 @@ header =
                 , cursor pointer
                 , fontSize (ms 1)
                 ]
+            , E.span
+                [ paddingRight (ms 1)
+                , color (mono G1)
+                ]
             ]
         ]
     ]
@@ -141,12 +148,20 @@ containers =
     , class "resource-list"
         [ displayFlex
         , justifyContent spaceBetween
+        , flexWrap wrap
         ]
     , class "resource-item"
         [ backgroundColor (mono W1)
         , padding (ms 1)
         , width (calc (pct 50) minus (ms 0))
         , position relative
+        , marginBottom (ms 1)
+        , smallDisplay
+            [ width (calc (pct 33.3) minus (ms 0))
+            ]
+        , largeDisplay
+            [ width (calc (pct 25) minus (ms 0))
+            ]
         ]
     ]
 

@@ -45,27 +45,47 @@ type alias Resource =
 
 type alias Model =
     { resources : List Resource
-    , selectedCategory : Category
+    , selectedCategory : Maybe Category
+    , selectedLevel : Maybe Level
     }
 
 
 init : ( Model, Cmd Msg )
 init =
     { resources = data
-    , selectedCategory = Article
+    , selectedCategory = Nothing
+    , selectedLevel = Nothing
     }
         ! []
 
 
 type Msg
-    = NoOp
+    = SelectCategoryFilter Category
+    | SelectLevelFilter Level
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NoOp ->
-            model ! []
+        SelectCategoryFilter category ->
+            let
+                selected =
+                    if model.selectedCategory == Just category then
+                        Nothing
+                    else
+                        Just category
+            in
+            { model | selectedCategory = selected } ! []
+
+        SelectLevelFilter level ->
+            let
+                selected =
+                    if model.selectedLevel == Just level then
+                        Nothing
+                    else
+                        Just level
+            in
+            { model | selectedLevel = selected } ! []
 
 
 view : Model -> Html Msg
@@ -81,7 +101,7 @@ headerView model =
     header []
         [ div [ class "titles" ]
             [ h1 [] [ text "Elm Resource" ]
-            , h3 [] [ text "An overview of useful Elm resources" ]
+            , h3 [] [ text "A handmade list of useful Elm resources" ]
             ]
         , levelFilterView model
         , categoryFilterView model
@@ -90,32 +110,32 @@ headerView model =
 
 categoryFilterView : Model -> Html Msg
 categoryFilterView model =
-    nav []
-        (List.map (filterItem << categoryToString)
-            [ Example
-            , Discussion
-            , Article
-            , Tutorial
-            , Video
-            , Exercise
-            ]
-        )
+    nav [] <|
+        span [] [ text "Categories" ]
+            :: List.map (filterItem SelectCategoryFilter categoryToString)
+                [ Example
+                , Discussion
+                , Article
+                , Tutorial
+                , Video
+                , Exercise
+                ]
 
 
 levelFilterView : Model -> Html Msg
 levelFilterView model =
-    nav []
-        (List.map (filterItem << levelToString)
-            [ Beginner
-            , Intermediate
-            , Advanced
-            ]
-        )
+    nav [] <|
+        span [] [ text "Level" ]
+            :: List.map (filterItem SelectLevelFilter levelToString)
+                [ Beginner
+                , Intermediate
+                , Advanced
+                ]
 
 
-filterItem : String -> Html Msg
-filterItem x =
-    a [ class "filter-item" ] [ text x ]
+filterItem : (a -> Msg) -> (a -> String) -> a -> Html Msg
+filterItem msg fn x =
+    a [ onClick (msg x), class "filter-item" ] [ text (fn x) ]
 
 
 resourceListView : Model -> Html Msg
@@ -141,6 +161,10 @@ resourceTopic x =
 data : List Resource
 data =
     [ Resource "Real World SPA" "Elm codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the RealWorld spec and API." "Richard Feldman" "https://github.com/rtfeldman/elm-spa-example" Advanced Example [ "Single Page App", "Authentication" ]
+    , Resource "Real World SPA" "Elm codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the RealWorld spec and API." "Richard Feldman" "https://github.com/rtfeldman/elm-spa-example" Advanced Example [ "Single Page App", "Authentication" ]
+    , Resource "Real World SPA" "Elm codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the RealWorld spec and API." "Richard Feldman" "https://github.com/rtfeldman/elm-spa-example" Beginner Example [ "Single Page App", "Authentication" ]
+    , Resource "Real World SPA" "Elm codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the RealWorld spec and API." "Richard Feldman" "https://github.com/rtfeldman/elm-spa-example" Advanced Example [ "Single Page App", "Authentication" ]
+    , Resource "Real World SPA" "Elm codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the RealWorld spec and API." "Richard Feldman" "https://github.com/rtfeldman/elm-spa-example" Advanced Example [ "Single Page App", "Authentication" ]
     , Resource "Real World SPA" "Elm codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the RealWorld spec and API." "Richard Feldman" "https://github.com/rtfeldman/elm-spa-example" Advanced Example [ "Single Page App", "Authentication" ]
     ]
 
